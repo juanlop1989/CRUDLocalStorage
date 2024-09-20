@@ -149,6 +149,39 @@ const ShowProveedores = () => {
         });
     };
 
+
+
+    // Función para verificar si hay registros en localStorage
+    const hasProveedores = () => {
+        const localStorageProveedor = localStorage.getItem('PROVEEDOR');
+        return localStorageProveedor && JSON.parse(localStorageProveedor).length > 0;
+    };
+
+    /**
+     * Proceso para eliminar todos los proveedores
+     * @param {Number} id - Identificador del proveedor a eliminar 
+     */
+    const deleteAllProveedor = (id) => {
+        const MySwal = withReactContent(Swal);
+
+        MySwal.fire({
+            title: '¿Está seguro de eliminar todos los Proveedores?',
+            icon: 'question',
+            text: 'No habrá marcha atrás',
+            showCancelButton: true,
+            confirmButtonText: 'Si, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem('PROVEEDOR');
+                setProveedores([]);
+                alertaSuccess('Se eliminaron todos los proveedores');
+            }
+        }).catch((error) => {
+            alertaError(error);
+        });
+    };
+
     return (
         <div className="App">
             <div className="container-fluid">
@@ -175,6 +208,7 @@ const ShowProveedores = () => {
                                     <th>Teléfono</th>
                                     <th>Acciones</th>
                                 </tr>
+                                
                             </thead>
                             <tbody className='table-group-divider'>
                                 {
@@ -195,10 +229,26 @@ const ShowProveedores = () => {
                                         </tr>
                                     ))
                                 }
+
+                                
                             </tbody>
                         </table>
                     </div>
                 </div>
+                                <div className="container-fluid">
+                                    <div className="row mt-3">
+                                        <div className="col-md-4 offset-md-4">
+                                            <div className="d-grid mx-auto">
+                                                {hasProveedores() && (
+                                                    <button onClick={deleteAllProveedor} className="btn btn-danger mt-2">
+                                                        <i className="fa-solid fa-trash-can" /> Elimina Todo
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                
             </div>
 
             <div id='modalProveedores' className='modal fade' aria-hidden='true'>
@@ -229,6 +279,8 @@ const ShowProveedores = () => {
                             </button>
                             <button id='btnCerrarModal' className='btn btn-danger' data-bs-dismiss='modal'> Cerrar</button>
                         </div>
+
+                        
                     </div>
                 </div>
             </div>
